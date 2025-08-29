@@ -66,14 +66,14 @@
                     },
                     success:function(response){
                         console.log(response);
-                        alert(response.message);
+                        alert(response.success);
                         $("#result").text(response.success);
-                        $("#result").fadeIn(2000).fadeOut(2000);
+                        $("#result").fadeToggle(2000);
                     },
                     error:function(xhr,status,error){
                         alert(error);
                         $("#result").text(response.error);
-                        $("#result").fadeIn(2000).fadeOut(2000);
+                        $("#result").fadeToggle(2000);
                     }
 
                 });
