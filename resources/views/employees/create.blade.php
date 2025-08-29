@@ -34,7 +34,7 @@
         }
 
         button[type="submit"]:hover {
-            background: #0056b3;
+            background: #0e9273;
         }
     </style>
 @endsection
@@ -48,13 +48,14 @@
         <input type="text" id="lastname" name="lastname" required>
 
         <button type="submit" id="submit">Create Employee</button>
+        <h1 id="result"></h1>
     </form>
     <script>
         $(document).ready(function() {
             $("#frm-create").submit(function(e) {
                 e.preventDefault();
                 let fname=$("#firstname").val();
-                let lname=$("#lastname").val();  
+                let lname=$("#lastname").val();
                 $.ajax({
                     type:"post",
                     url:"{{route("employees.store")}}",
@@ -66,6 +67,8 @@
                     success:function(response){
                         console.log(response);
                         alert("Employee created successfully!");
+                        $("#result").text("Employee created successfully!");
+                        $("#result").fadeIn(3000).fadeOut(3000);
                     },
                     error:function(xhr,status,error){
                         alert(error);

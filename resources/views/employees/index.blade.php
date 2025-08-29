@@ -1,68 +1,59 @@
 @extends('layouts.app')
 @section('content')
-<form id="frm-index">
-    <table>
+<table>
+    <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Actions</th>
+    </tr>
+    @foreach($employees as $employee)
         <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Actions</th>
+            <td>{{ $employee->firstname }}</td>
+            <td>{{ $employee->lastname }}</td>
+            <td>
+                <button type="button" class="btn-edit" data-id="{{ $employee->id }}">Edit</button>
+                <button type="button" class="btn-delete" data-id="{{ $employee->id }}">Delete</button>
+            </td>
         </tr>
-        @foreach($employees as $employee)
-            <tr>
-                <td>{{$employee->firstname}}</td>
-                <td>{{$employee->lastname}}</td>
-                <td>
-                    <button type="button" id="btn-edit" >Edit</button>
-                    <button type="button" id="btn-delete" >Delete</button>
-                </td>
-            </tr>
-        @endforeach
-    </table>
-</form>
+    @endforeach
+</table>
+
 <script>
     $(document).ready(function() {
-        $("#frm-index").submit(function(e) {
+        $('.btn-edit').click(function(e) {
             e.preventDefault();
+            let id = $(this).data('id');
             $.ajax({
-                type:"get",
-                url:"{{route("employees.index")}}",
-                success:function(response){
-                    console.log(response);
+                type: "GET",
+                url: `/employees/${id}/edit`,
+                success: function(response) {
+                    console.log("Edit response:", response);
                 },
-                error:function(xhr,status,error){
-                    console.log(xhr);
+                error: function(xhr, status, error) {
+                    console.log("Edit error:", xhr);
                 }
             });
         });
-        $("#btn-edit").click(function(e) {
+
+        // Delete button
+        $('.btn-delete').click(function(e) {
             e.preventDefault();
+            let id = $(this).data('id');
             $.ajax({
-                type:"get",
-                url: "{{ route('employees.edit', $employee->id) }}",
-                success:function(response){
-                    console.log(response);
-                },
-                error:function(xhr,status,error){
-                    console.log(xhr);
-                }
-            });
-        });
-        $("#btn-delete").click(function(e) {
-            e.preventDefault();
-            $.ajax({
-                type:"get",
-                url:"{{route("employees.destroy")}}",
+                type: "POST",
+                url: `/employees/${id}`,
                 data: {
                     _token: "{{ csrf_token() }}",
-                    id: $employee->id
-                }
-                success:function(response){
-                    console.log(response);
+                    _method: "DELETE"
                 },
-                error:function(xhr,status,error){
-                    console.log(xhr);
+                success: function(response) {
+                    console.log("Delete response:", response);
+                },
+                error: function(xhr, status, error) {
+                    console.log("Delete error:", xhr);
                 }
             });
-        })
-    })
+        });
+    });
+</script>
 @endsection
