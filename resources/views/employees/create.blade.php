@@ -67,12 +67,12 @@
                     success:function(response){
                         console.log(response);
                         alert(response.message);
-                        $("#result").text(response.message[0]);
+                        $("#result").text(response.success);
                         $("#result").fadeIn(2000).fadeOut(2000);
                     },
                     error:function(xhr,status,error){
                         alert(error);
-                        $("#result").text(error.message[1]);
+                        $("#result").text(response.error);
                         $("#result").fadeIn(2000).fadeOut(2000);
                     }
 
