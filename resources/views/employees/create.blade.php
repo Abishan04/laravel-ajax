@@ -66,12 +66,14 @@
                     },
                     success:function(response){
                         console.log(response);
-                        alert("Employee created successfully!");
-                        $("#result").text("Employee created successfully!");
-                        $("#result").fadeIn(3000).fadeOut(3000);
+                        alert(response.message);
+                        $("#result").text(response.message[0]);
+                        $("#result").fadeIn(2000).fadeOut(2000);
                     },
                     error:function(xhr,status,error){
                         alert(error);
+                        $("#result").text(error.message[1]);
+                        $("#result").fadeIn(2000).fadeOut(2000);
                     }
 
                 });
