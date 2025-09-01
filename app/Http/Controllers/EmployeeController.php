@@ -21,7 +21,8 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        return view('employees.create');
+        $employees = Employee::all();
+        return view('employees.create', compact('employees'));
     }
 
     /**
@@ -34,9 +35,12 @@ class EmployeeController extends Controller
         $employee->firstname = $request->input('firstname');
         $employee->lastname = $request->input('lastname');
         $employee->save();
-        $message = ['Employee created successfully','something went wrong'];
-        return response()->json(message);
-        return redirect()->route('employees.create');
+        $message = [
+            'success' => 'Employee created successfully',
+            'error' => 'Something went wrong'
+        ];
+        return response()->json($message);
+        // return redirect()->route('employees.create');
     }
 
     /**
@@ -44,7 +48,8 @@ class EmployeeController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $employee = Employee::find($id);
+        return view('employees.show', compact('employee'));
     }
 
     /**
@@ -61,7 +66,16 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $employee = Employee::find($id);
+        $employee->firstname = $request->input('firstname');
+        $employee->lastname = $request->input('lastname');
+        $employee->save();
+        $message = [
+            'success' => 'Employee updated successfully',
+            'error' => 'Something went wrong'
+        ];
+        return response()->json($message);
+        return redirect()->route('employees.index');
     }
 
     /**

@@ -5,7 +5,7 @@
             max-width: 400px;
             margin: 40px auto;
             padding: 24px;
-            background: #e4e4e4ff;
+            background: #f9f9f9;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
@@ -38,46 +38,50 @@
         }
     </style>
 @endsection
+
 @section('content')
-    <form   id="frm-create">
-        @csrf
+    <form id="frm-create">
         <label for="firstname">First Name:</label>
-        <input type="text" id="firstname" name="firstname" required>
+        <input type="text" id="firstname" name="firstname" value="{{ $employee->firstname }}" required>
 
         <label for="lastname">Last Name:</label>
-        <input type="text" id="lastname" name="lastname" required>
+        <input type="text" id="lastname" name="lastname" value="{{ $employee->lastname }}" required>
 
-        <button type="submit" id="submit">Create Employee</button>
+        <button type="submit" id="submit">Update Employee</button>
         <h1 id="result"></h1>
     </form>
     <script>
         $(document).ready(function() {
             $("#frm-create").submit(function(e) {
                 e.preventDefault();
-                let fname=$("#firstname").val();
-                let lname=$("#lastname").val();
+                let fname = $("#firstname").val();
+                let lname = $("#lastname").val();
+                let id = "{{ $employee->id }}";
                 $.ajax({
-                    type:"post",
-                    url:"{{route("employees.store")}}",
-                    data:{
+                    type: "POST",
+                    url: `/employees/${id}`,
+                    data: {
                         _token: "{{ csrf_token() }}",
-                        firstname:fname,
-                        lastname:lname
+                        _method: "PUT",
+                        firstname: fname,
+                        lastname: lname
                     },
-                    success:function(response){
+                    success: function(response) {
                         console.log(response);
                         $("#result").text(response.success);
+                        // alert(response)
+                        // alert(response.message);
+                        // $("#result").text(response.message[0]);
                         $("#result").fadeIn(2000).fadeOut(2000);
                     },
-                    error:function(xhr,status,error){
+                    error: function(xhr, status, error) {
                         $("#result").text(response.error);
+                        // alert(error);
+                        // $("#result").text(error.message[1]);
                         $("#result").fadeIn(2000).fadeOut(2000);
                     }
-
                 });
             });
         });
-        
     </script>
-  @include('employees.partials.result')
 @endsection

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
-<table>
+
+<table border="1" style="margin: 20px auto; border-collapse: collapse; width: 100%;">
     <tr>
         <th>First Name</th>
         <th>Last Name</th>
@@ -20,37 +21,56 @@
 
 <script>
     $(document).ready(function() {
-        $('.btn-edit').click(function(e) {
+        // Edit button
+        $(document).on('click', '.btn-edit', function(e) {
             e.preventDefault();
             let id = $(this).data('id');
+
             $.ajax({
                 type: "GET",
                 url: `/employees/${id}/edit`,
                 success: function(response) {
-                    console.log("Edit response:", response);
+                    window.location.href = `/employees/${id}/edit`;
                 },
                 error: function(xhr, status, error) {
-                    console.log("Edit error:", xhr);
+                    Swal.fire('Error', 'Could not fetch employee data.', 'error');
                 }
             });
         });
 
-        // Delete button
-        $('.btn-delete').click(function(e) {
+        $(document).on('click', '.btn-delete', function(e) {
             e.preventDefault();
             let id = $(this).data('id');
-            $.ajax({
-                type: "POST",
-                url: `/employees/${id}`,
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    _method: "DELETE"
-                },
-                success: function(response) {
-                    console.log("Delete response:", response);
-                },
-                error: function(xhr, status, error) {
-                    console.log("Delete error:", xhr);
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: `/employees/${id}`,
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            _method: "DELETE"
+                        },
+                        success: function(response) {
+                            Swal.fire(
+                                'Deleted!',
+                                'Employee has been deleted.',
+                                'success'
+                            ).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'Could not delete employee.', 'error');
+                        }
+                    });
                 }
             });
         });
