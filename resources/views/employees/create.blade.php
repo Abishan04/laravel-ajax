@@ -1,83 +1,66 @@
 @extends('layouts.app')
-@section('style')
-    <style>
-        form {
-            max-width: 400px;
-            margin: 40px auto;
-            padding: 24px;
-            background: #e4e4e4ff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        button[type="submit"] {
-            background: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        button[type="submit"]:hover {
-            background: #0e9273;
-        }
-    </style>
-@endsection
 @section('content')
-    <form   id="frm-create">
-        @csrf
-        <label for="firstname">First Name:</label>
-        <input type="text" id="firstname" name="firstname" required>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form id="frm-create" class="card p-4 shadow-sm">
+                @csrf
 
-        <label for="lastname">Last Name:</label>
-        <input type="text" id="lastname" name="lastname" required>
+                <div class="mb-3">
+                    <label for="firstname" class="form-label">First Name</label>
+                    <input type="text" id="firstname" name="firstname" class="form-control" required>
+                </div>
 
-        <button type="submit" id="submit">Create Employee</button>
-        <h1 id="result"></h1>
-    </form>
-    <script>
-        $(document).ready(function() {
-            $("#frm-create").submit(function(e) {
-                e.preventDefault();
-                let fname=$("#firstname").val();
-                let lname=$("#lastname").val();
-                $.ajax({
-                    type:"post",
-                    url:"{{route("employees.store")}}",
-                    data:{
-                        _token: "{{ csrf_token() }}",
-                        firstname:fname,
-                        lastname:lname
-                    },
-                    success:function(response){
-                        console.log(response);
-                        $("#result").text(response.success);
-                        $("#result").fadeIn(2000).fadeOut(2000);
-                    },
-                    error:function(xhr,status,error){
-                        $("#result").text(response.error);
-                        $("#result").fadeIn(2000).fadeOut(2000);
+                <div class="mb-3">
+                    <label for="lastname" class="form-label">Last Name</label>
+                    <input type="text" id="lastname" name="lastname" class="form-control" required>
+                </div>
+
+                <button type="submit" id="submit" class="btn btn-primary w-100">Create Employee</button>
+            </form>
+
+            <div class="mt-3">
+                <div id="result" class="alert d-none"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function() {
+        $("#frm-create").submit(function(e) {
+            e.preventDefault();
+            let fname = $("#firstname").val();
+            let lname = $("#lastname").val();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('employees.store') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    firstname: fname,
+                    lastname: lname
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire('Success', response.success, 'success');
+                        $("#frm-create")[0].reset();
+                    } else {
+                        Swal.fire('Error', 'Something went wrong.', 'error');
                     }
-
-                });
+                },
+                error: function(xhr) {
+                    let msg = 'An error occurred.';
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        msg = xhr.responseJSON.error;
+                    }
+                    Swal.fire('Error', msg, 'error');
+                }
             });
         });
-        
-    </script>
-  @include('employees.partials.result')
+    });
+</script>
+  @include('employees.index')
 @endsection
