@@ -4,7 +4,7 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <form id="frm-create" class="card p-4 shadow-sm">
+            <form id="frm-create" class="card p-4 shadow-sm" action ="{{ route('employees.store') }}" method = "POST">
                 @csrf
 
                 <div class="mb-3">
@@ -27,23 +27,16 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
 <script>
     $(document).ready(function() {
         $("#frm-create").submit(function(e) {
             e.preventDefault();
-            let fname = $("#firstname").val();
-            let lname = $("#lastname").val();
-
             $.ajax({
-                type: "POST",
-                url: "{{ route('employees.store') }}",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    firstname: fname,
-                    lastname: lname
-                },
-                success: function(response) {
+                type: $(this).attr('method'),
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function(response) { 
                     if (response.success) {
                         Swal.fire('Success', response.success, 'success');
                         $("#frm-create")[0].reset();

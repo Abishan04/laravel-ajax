@@ -1,6 +1,6 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 
-@section('content')
+@section('content') --}}
 <div class="container mt-2">
     <h2 class="mb-4">Employee List</h2>
 
@@ -78,7 +78,8 @@
                     });
                 }
             });
+
         });
     });
 </script>
-@endsection
+{{-- @endsection --}}

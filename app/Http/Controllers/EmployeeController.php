@@ -40,8 +40,7 @@ class EmployeeController extends Controller
             'error' => 'Something went wrong'
                 ];
                 return response()->json($message);
-                return redirect()->route('employees.index');
-    }
+              }
 
     /**
      * Display the specified resource.
