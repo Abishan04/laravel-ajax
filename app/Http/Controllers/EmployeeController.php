@@ -35,12 +35,9 @@ class EmployeeController extends Controller
         $employee->firstname = $request->input('firstname');
         $employee->lastname = $request->input('lastname');
         $employee->save();
-        $message = [
-            'success' => 'Employee created successfully',
-            'error' => 'Something went wrong'
-        ];
-        return response()->json($message);
-        // return redirect()->route('employees.create');
+        $message = ['Employee created successfully','something went wrong'];
+        return response()->json(message);
+        return redirect()->route('employees.create');
     }
 
     /**
