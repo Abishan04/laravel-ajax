@@ -30,33 +30,40 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        // return response()->json("success");
         $employee = new Employee();
         $employee->firstname = $request->input('firstname');
         $employee->lastname = $request->input('lastname');
         $employee->save();
-        $message = [
-            'success' => 'Employee created successfully',
-            'error' => 'Something went wrong'
-                ];
-                return response()->json($message);
-              }
+    }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        $employee = Employee::find($id);
-        return view('employees.show', compact('employee'));
+public function show($id)
+{
+    $employee = Employee::findOrFail($id);
+
+    if (request()->ajax()) {
+        return view('employees.show', compact('employee'))->render(); // Only HTML
     }
+
+    return view('employees.show', compact('employee')); // Full page
+}
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+   public function edit(string $id)
     {
         $employee = Employee::find($id);
+
+        if (request()->ajax()) {
+            return response()->json([
+                'firstname' => $employee->firstname,
+                'lastname' => $employee->lastname,
+            ]);
+        }
+
         return view('employees.edit', compact('employee'));
     }
 
@@ -68,13 +75,11 @@ class EmployeeController extends Controller
         $employee = Employee::find($id);
         $employee->firstname = $request->input('firstname');
         $employee->lastname = $request->input('lastname');
-        $employee->save();
-        $message = [
-            'success' => 'Employee updated successfully',
-            'error' => 'Something went wrong'
-        ];
-        return response()->json($message);
-        return redirect()->route('employees.index');
+        if ($employee->save()) {
+            return response()->json(['success' => 'Employee updated successfully']);
+        } else {
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
     }
 
     /**

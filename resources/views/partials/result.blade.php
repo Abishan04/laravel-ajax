@@ -1,10 +1,7 @@
-@extends('layouts.app')
-
-@section('content')
 <div class="container mt-2">
     <h2 class="mb-4">Employee List</h2>
 
-    <table id="myTable" class="table table-bordered table-hover shadow-sm table-sm align-middle ">
+    <table class="table table-bordered table-hover shadow-sm table-sm align-middle ">
         <thead class="table-light">
             <tr>
                 <th>First Name</th>
@@ -22,7 +19,8 @@
                         data-id="{{ $employee->id }}">Edit</button>
                     <button type="button" class="btn btn-sm btn-danger btn-delete"
                         data-id="{{ $employee->id }}">Delete</button>
-                   <button type="button" class="btn btn-sm btn-info btn-show" data-id="{{ $employee->id }}">Show</button>
+                    <button type="button" class="btn btn-sm btn-info btn-show"
+                        data-id="{{ $employee->id }}">Show</button>
                 </td>
             </tr>
             @endforeach
@@ -32,11 +30,10 @@
 
 <script>
     $(document).ready(function () {
-        // Edit button
         $(document).on('click', '.btn-edit', function (e) {
             e.preventDefault();
             let id = $(this).data('id');
-            $.get(`/employees/${id}/edit`, function (response) {
+            $.get(`/employees/${id}/edit`, function(response) {
                 Swal.fire({
                     title: 'Edit Employee',
                     html:
@@ -63,17 +60,17 @@
                                 firstname: result.value.firstname,
                                 lastname: result.value.lastname
                             },
-                            success: function (res) {
+                            success: function(res) {
                                 Swal.fire('Success', 'Employee updated!', 'success')
                                     .then(() => location.reload());
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 Swal.fire('Error', 'Update failed.', 'error');
                             }
                         });
                     }
                 });
-            }).fail(function () {
+            }).fail(function() {
                 Swal.fire('Error', 'Could not fetch employee data.', 'error');
             });
         });
@@ -112,6 +109,7 @@
         });
 
         // Show button
+            // Show button
 $(document).on('click', '.btn-show', function (e) {
     e.preventDefault(); // Prevent default behavior
     let id = $(this).data('id');
@@ -143,8 +141,4 @@ $(document).on('click', '.btn-show', function (e) {
 
         });
     });
-
-
-
 </script>
-@endsection

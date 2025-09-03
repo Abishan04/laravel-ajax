@@ -40,7 +40,7 @@
 @endsection
 
 @section('content')
-    <form id="frm-create">
+    <form id="frm-edit" method="POST" action="/employees/{{ $employee->id }}">
         <label for="firstname">First Name:</label>
         <input type="text" id="firstname" name="firstname" value="{{ $employee->firstname }}" required>
 
@@ -50,35 +50,39 @@
         <button type="submit" id="submit">Update Employee</button>
         <h1 id="result"></h1>
     </form>
+    <table class="table table-bordered table-hover shadow-sm table-sm align-middle ">
+        <tr>
+            <td><strong>First Name</strong></td>
+            <td>{{ $employee->firstname }}</td>
+        </tr>
+        <tr>
+            <td><strong>Last Name</strong></td>
+            <td>{{ $employee->lastname }}</td>
+        </tr>
+    </table>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
-            $("#frm-create").submit(function(e) {
+            $("#frm-edit").submit(function(e) {
                 e.preventDefault();
-                let fname = $("#firstname").val();
-                let lname = $("#lastname").val();
-                let id = "{{ $employee->id }}";
                 $.ajax({
-                    type: "POST",
-                    url: `/employees/${id}`,
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        _method: "PUT",
-                        firstname: fname,
-                        lastname: lname
-                    },
+                    type: $(this).attr('method'),
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
                     success: function(response) {
-                        console.log(response);
-                        $("#result").text(response.success);
-                        // alert(response)
-                        // alert(response.message);
-                        // $("#result").text(response.message[0]);
-                        $("#result").fadeIn(2000).fadeOut(2000);
+                        if (response.success) {
+                            Swal.fire('Success', response.success, 'success');
+                        } else {
+                            Swal.fire('Error', 'Something went wrong.', 'error');
+                        }
                     },
                     error: function(xhr, status, error) {
-                        $("#result").text(response.error);
-                        // alert(error);
-                        // $("#result").text(error.message[1]);
-                        $("#result").fadeIn(2000).fadeOut(2000);
+                        let msg = 'An error occurred.';
+                        if (xhr.responseJSON && xhr.responseJSON.error) {
+                            msg = xhr.responseJSON.error;
+                        }
+                        Swal.fire('Error', msg, 'error');
                     }
                 });
             });

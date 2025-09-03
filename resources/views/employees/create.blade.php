@@ -7,14 +7,14 @@
             <form id="frm-create" class="card p-4 shadow-sm" action ="{{ route('employees.store') }}" method = "POST">
                 @csrf
 
-                <div class="mb-3">
-                    <label for="firstname" class="form-label">First Name</label>
-                    <input type="text" id="firstname" name="firstname" class="form-control" required>
-                </div>
+                <div class="mb-3 form-floating">
+    <input type="text" id="firstname" name="firstname" class="form-control" placeholder="First Name" required>
+    <label for="firstname" class="form-label">First Name</label>
+</div>
 
-                <div class="mb-3">
-                    <label for="lastname" class="form-label">Last Name</label>
-                    <input type="text" id="lastname" name="lastname" class="form-control" required>
+                <div class="mb-3 form-floating">
+                    <input type="text" id="lastname" name="lastname" class="form-control"  placeholder="Last Name" required>
+                    <label for="lastname"  class="form-label">Last Name</label>
                 </div>
 
                 <button type="submit" id="submit" class="btn btn-primary w-100">Create Employee</button>
@@ -27,9 +27,8 @@
     </div>
 </div>
 
-{{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
 <script>
-    $($document).ready(function() {
+    $(document).ready(function() {
         $("#frm-create").submit(function(e) {
             e.preventDefault();
             $.ajax({
@@ -55,5 +54,5 @@
         });
     });
 </script>
-  @include('employees.index')
+@include('partials.result')
 @endsection
