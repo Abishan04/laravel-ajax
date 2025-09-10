@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 
+
 class EmployeeController extends Controller
 {
     /**
@@ -34,6 +35,7 @@ class EmployeeController extends Controller
         $employee->firstname = $request->input('firstname');
         $employee->lastname = $request->input('lastname');
         $employee->save();
+        return response()->json(['success' => 'Employee created successfully.']);
     }
 
     /**
