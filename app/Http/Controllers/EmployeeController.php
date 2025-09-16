@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\Grade;
+use App\Models\Image;
+use App\Models\Subject;
 use Illuminate\Http\Request;
 
 
@@ -22,8 +25,11 @@ class EmployeeController extends Controller
      */
     public function create()
     {
+        $images = Image::all();
         $employees = Employee::all();
-        return view('employees.create', compact('employees'));
+        $subjects = Subject::paginate( 5);  
+        $grades = Grade::paginate( 5);
+        return view('employees.create', compact('employees','subjects','grades','images'));
     }
 
     /**
@@ -31,10 +37,12 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        $employee = new Employee();
-        $employee->firstname = $request->input('firstname');
-        $employee->lastname = $request->input('lastname');
-        $employee->save();
+        dd($request->all());
+        // $employee = new Employee();
+        // $employee->firstname = $request->input('firstname');
+        // $employee->lastname = $request->input('lastname');
+        // $employee->save();
+        
         return response()->json(['success' => 'Employee created successfully.']);
     }
 

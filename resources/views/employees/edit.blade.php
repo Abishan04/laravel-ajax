@@ -41,13 +41,13 @@
 
 @section('content')
     <form id="frm-edit" method="POST" action="/employees/{{ $employee->id }}">
-        <label for="firstname">First Name:</label>
-        <input type="text" id="firstname" name="firstname" value="{{ $employee->firstname }}" required>
+        <x-forms.input label="First Name:" id="firstname" name="firstname" :value="$employee->firstname" required />
 
-        <label for="lastname">Last Name:</label>
-        <input type="text" id="lastname" name="lastname" value="{{ $employee->lastname }}" required>
+        <x-forms.input label="Last Name:" id="lastname" name="lastname" :value="$employee->lastname" required />
 
-        <button type="submit" id="submit">Update Employee</button>
+        <x-forms.button type="submit" id="submit" class="btn-primary">
+            Update Employee
+        </x-forms.button>
         <h1 id="result"></h1>
     </form>
     <table class="table table-bordered table-hover shadow-sm table-sm align-middle ">
@@ -63,21 +63,21 @@
     <!-- SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        $(document).ready(function() {
-            $("#frm-edit").submit(function(e) {
+        $(document).ready(function () {
+            $("#frm-edit").submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     type: $(this).attr('method'),
                     url: $(this).attr('action'),
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         if (response.success) {
                             Swal.fire('Success', response.success, 'success');
                         } else {
                             Swal.fire('Error', 'Something went wrong.', 'error');
                         }
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         let msg = 'An error occurred.';
                         if (xhr.responseJSON && xhr.responseJSON.error) {
                             msg = xhr.responseJSON.error;
@@ -88,5 +88,5 @@
             });
         });
     </script>
-  
+
 @endsection
